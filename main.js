@@ -1,6 +1,8 @@
 const api ={
     key:"b39f7751ca7b4c20ca547230d54eea6a",
-    base:"http://api.openweathermap.org/data/2.5/"
+    key2:"3UA_ZKdxCsNDj8B9uoHGyboI1PQOQEP4eC4Fjmfqy6M",
+    base:"http://api.openweathermap.org/data/2.5/",
+    base2:"https://api.unsplash.com/search/photos/"
 }
 
 const searchbox= document.querySelector('.search-box');
@@ -8,6 +10,7 @@ searchbox.addEventListener('keypress',setQuery);
 function setQuery(evt){
     if(evt.keyCode == 13){
         getResults(searchbox.value);
+        getResults2(searchbox.value);
     }
 }
 
@@ -16,10 +19,37 @@ function getResults(query){
     .then(weather=>{
         return weather.json();
     }).then(displayResults);
+    //obs:depois dar uma olhada nesse lance do pq ta funcionando.
 }
+function getResults2(query){
+    fetch(`${api.base2}?query=${query}&per_page=1&client_id=${api.key2}`)
+    .then(res=>{
+        if(res.ok){
+            return res.json()
+        }else{
+            alert(city.status)
+        }
+
+        })
+        // .then(data=>{
+        //     console.log(data.results[0].urls.raw)
+        // })
+        .then(displayResults2)
+    }
+
+    function displayResults2(data){
+        console.log(data)
+        let image = data.results[0].urls.raw;
+        console.log(image);
+         let cityImage = document.querySelector('body');
+         console.log(cityImage)
+        cityImage.style.backgroundImage = `url(${image})`;
+    }
+
 
 function displayResults(weather){
     // console.log(weather);
+   
     let city = document.querySelector('.location .city');
     city.innerText = `${weather.name},${weather.sys.country}`;
     let now = new Date();
